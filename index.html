@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIG Car Wash - Addis Ababa</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-20">
+    <!-- Top Header (No Admin Link) -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 shadow-md sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-sky-400">🚗 MIG Car Wash</h1>
+            <span class="text-xs text-slate-400">Addis Ababa, Ethiopia</span>
+        </div>
+    </header>
+
+    <!-- Main Content Container with Tabs -->
+    <main class="max-w-4xl w-full mx-auto p-4 md:p-6 space-y-6">
+        
+        <!-- TAB 1: HOME -->
+        <section id="tab-home" class="space-y-6">
+            <div class="bg-gradient-to-r from-sky-900 to-indigo-900 rounded-2xl p-6 md:p-8 shadow-lg border border-sky-700/50">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2">Professional Car Care in Ethiopia</h2>
+                <p class="text-slate-300 text-sm md:text-base mb-6">Experience top-tier washing, detailing, and reliable maintenance right here in Addis Ababa.</p>
+                <button onclick="switchTab('book')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3 rounded-xl shadow transition">Book a Wash Now</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl shadow">
+                    <h3 class="font-bold text-sky-300 text-lg mb-2">Standard Services</h3>
+                    <p class="text-sm text-slate-300 mb-4">Half Wash & Full Wash options customized for Normal cars and SUVs with transparent pricing.</p>
+                    <button onclick="switchTab('book')" class="text-sky-400 text-sm font-bold hover:underline">Book Standard →</button>
+                </div>
+                <div class="bg-slate-800 border border-slate-700 p-5 rounded-2xl shadow">
+                    <h3 class="font-bold text-sky-300 text-lg mb-2">Special Detailing</h3>
+                    <p class="text-sm text-slate-300 mb-4">Ranges from 1,500 - 8,000+ ETB. Call and discuss with our experts for premium auto detailing.</p>
+                    <button onclick="switchTab('directions')" class="text-sky-400 text-sm font-bold hover:underline">Contact & Location →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: BOOK -->
+        <section id="tab-book" class="hidden space-y-6">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-xl font-bold mb-4 text-sky-300">Schedule Your Wash</h3>
+                <form id="booking-form" onsubmit="handleBooking(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Your Name</label>
+                            <input type="text" id="b-name" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500" placeholder="Abebe Kebede">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Phone Number</label>
+                            <input type="tel" id="b-phone" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500" placeholder="0911223344">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Plate Number</label>
+                            <input type="text" id="b-plate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm uppercase focus:outline-none focus:border-sky-500" placeholder="A34921">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Vehicle Type</label>
+                            <select id="b-vehicle" onchange="updateServiceOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500">
+                                <option value="Normal">Normal Car</option>
+                                <option value="SUV">SUV</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Service Type</label>
+                            <select id="b-service" onchange="calculatePrice()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Booking Date</label>
+                            <input type="date" id="b-date" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500 text-slate-200">
+                        </div>
+                    </div>
+
+                    <!-- Payment / Info Box -->
+                    <div id="payment-box" class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Total Price</span>
+                            <span id="display-amount" class="text-xl font-bold text-emerald-400">300 ETB</span>
+                        </div>
+                        <div class="text-right text-xs text-slate-400">
+                            <p>Telebirr: <strong class="text-white">0994634949</strong></p>
+                            <p>CBE Bank: <strong class="text-white">1000123456789</strong></p>
+                        </div>
+                    </div>
+
+                    <div id="payment-inputs" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Payment Method</label>
+                            <select id="b-method" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500">
+                                <option value="telebirr">Telebirr</option>
+                                <option value="cbe">Commercial Bank of Ethiopia (CBE)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Transaction ID / Receipt #</label>
+                            <input type="text" id="b-tx" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-sky-500" placeholder="TXR839201">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 font-bold py-3 rounded-xl transition shadow-lg mt-2">Submit Booking</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TAB 3: DIRECTIONS -->
+        <section id="tab-directions" class="hidden space-y-6">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl space-y-4">
+                <h3 class="text-xl font-bold text-sky-300">📍 Directions & Contact Us</h3>
+                <p class="text-slate-300 text-sm">Visit MIG Car Wash in Addis Ababa or reach out to our team directly for custom detailing consultations.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                        <h4 class="font-bold text-sky-400 text-sm">📞 Phone & Consultations</h4>
+                        <p class="text-xs text-slate-300">Call us for Special Detailing (1,500 - 8,000+ ETB) bookings:</p>
+                        <p class="text-sm font-bold text-white">+251 99 463 4949</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                        <h4 class="font-bold text-sky-400 text-sm">🏢 Location</h4>
+                        <p class="text-xs text-slate-300">Addis Ababa, Ethiopia</p>
+                        <p class="text-xs text-emerald-400 font-semibold">Open Daily: 8:00 AM – 7:00 PM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: MY BOOKINGS -->
+        <section id="tab-my-bookings" class="hidden space-y-6">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl">
+                <h3 class="text-xl font-bold mb-4 text-sky-300">📋 My Bookings</h3>
+                <p class="text-xs text-slate-400 mb-4">Enter your phone number below to check the status of your car wash appointments.</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="tel" id="lookup-phone" placeholder="Enter Phone Number (e.g. 0911223344)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm">
+                    <button onclick="searchByPhone()" class="bg-sky-600 hover:bg-sky-500 px-6 py-3 rounded-lg font-bold text-sm">Search</button>
+                </div>
+                <div id="tracking-results" class="space-y-3"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 p-3 shadow-2xl z-50">
+        <div class="max-w-md mx-auto flex justify-around items-center text-xs font-semibold">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center gap-1 text-sky-400 transition">
+                <span class="text-lg">🏠</span>
+                <span>Home</span>
+            </button>
+            <button onclick="switchTab('book')" id="nav-book" class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-300 transition">
+                <span class="text-lg">➕</span>
+                <span>Book</span>
+            </button>
+            <button onclick="switchTab('directions')" id="nav-directions" class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-300 transition">
+                <span class="text-lg">📍</span>
+                <span>Directions</span>
+            </button>
+            <button onclick="switchTab('my-bookings')" id="nav-my-bookings" class="flex flex-col items-center gap-1 text-slate-400 hover:text-sky-300 transition">
+                <span class="text-lg">📋</span>
+                <span>My bookings</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Frontend Script Logic -->
+    <script>
+        let currentPrices = { normalHalf: 300, normalFull: 350, suvHalf: 350, suvFull: 450 };
+
+        async function fetchPrices() {
+            try {
+                const res = await fetch('/api/prices');
+                currentPrices = await res.json();
+                updateServiceOptions();
+            } catch (e) {
+                console.error('Failed to load prices');
+            }
+        }
+
+        function switchTab(tabName) {
+            ['home', 'book', 'directions', 'my-bookings'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${t}`);
+                navBtn.classList.remove('text-sky-400');
+                navBtn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            activeNav.classList.remove('text-slate-400');
+            activeNav.classList.add('text-sky-400');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Calendar date min setting
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('b-date').setAttribute('min', todayStr);
+        document.getElementById('b-date').value = todayStr;
+
+        function updateServiceOptions() {
+            const vehicle = document.getElementById('b-vehicle').value;
+            const serviceSelect = document.getElementById('b-service');
+
+            if (vehicle === 'Normal') {
+                serviceSelect.innerHTML = `
+                    <option value="Half Wash">Half Wash (${currentPrices.normalHalf} ETB)</option>
+                    <option value="Full Wash">Full Wash (${currentPrices.normalFull} ETB)</option>
+                    <option value="Special Detailing (1,500 - 8,000 ETB)">Special Detailing (1,500 - 8,000 ETB)</option>
+                    <option value="Auto Special / Premium (8,000+ ETB)">Auto Special / Premium (8,000+ ETB - Call & Discuss)</option>
+                `;
+            } else {
+                serviceSelect.innerHTML = `
+                    <option value="Half Wash">Half Wash (${currentPrices.suvHalf} ETB)</option>
+                    <option value="Full Wash">Full Wash (${currentPrices.suvFull} ETB)</option>
+                    <option value="Special Detailing (1,500 - 8,000 ETB)">Special Detailing (1,500 - 8,000 ETB)</option>
+                    <option value="Auto Special / Premium (8,000+ ETB)">Auto Special / Premium (8,000+ ETB - Call & Discuss)</option>
+                `;
+            }
+            calculatePrice();
+        }
+
+        function calculatePrice() {
+            const vehicle = document.getElementById('b-vehicle').value;
+            const service = document.getElementById('b-service').value;
+            const display = document.getElementById('display-amount');
+            const paymentBox = document.getElementById('payment-box');
+            const paymentInputs = document.getElementById('payment-inputs');
+
+            if (service.includes('Special Detailing') || service.includes('Auto Special')) {
+                display.innerText = 'Call & Discuss';
+                paymentBox.style.display = 'none';
+                paymentInputs.style.display = 'none';
+                document.getElementById('b-tx').removeAttribute('required');
+            } else {
+                paymentBox.style.display = 'flex';
+                paymentInputs.style.display = 'grid';
+                document.getElementById('b-tx').setAttribute('required', 'true');
+
+                let price = 300;
+                if (vehicle === 'Normal') {
+                    price = service.includes('Half') ? currentPrices.normalHalf : currentPrices.normalFull;
+                } else {
+                    price = service.includes('Half') ? currentPrices.suvHalf : currentPrices.suvFull;
+                }
+                display.innerText = price + ' ETB';
+            }
+        }
+
+        async function handleBooking(e) {
+            e.preventDefault();
+            const service = document.getElementById('b-service').value;
+            let amount = 0;
+            let method = 'none';
+            let tx = 'N/A';
+
+            if (!service.includes('Special')) {
+                const amountStr = document.getElementById('display-amount').innerText;
+                amount = parseInt(amountStr);
+                method = document.getElementById('b-method').value;
+                tx = document.getElementById('b-tx').value;
+            }
+
+            const payload = {
+                customerName: document.getElementById('b-name').value,
+                phoneNumber: document.getElementById('b-phone').value,
+                plateNumber: document.getElementById('b-plate').value,
+                vehicleType: document.getElementById('b-vehicle').value,
+                serviceType: service,
+                bookingDate: document.getElementById('b-date').value,
+                amount,
+                paymentMethod: method,
+                transactionId: tx
+            };
+
+            const res = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alert('Booking successfully submitted! Tracking ID: ' + data.booking.id);
+                document.getElementById('booking-form').reset();
+                document.getElementById('b-date').value = todayStr;
+                updateServiceOptions();
+                // Switch to my bookings and prefill phone
+                document.getElementById('lookup-phone').value = payload.phoneNumber;
+                switchTab('my-bookings');
+                searchByPhone();
+            } else {
+                alert(data.error || 'Booking failed');
+            }
+        }
+
+        async function searchByPhone() {
+            const phone = document.getElementById('lookup-phone').value.trim();
+            if (!phone) {
+                alert('Please enter your phone number.');
+                return;
+            }
+
+            const res = await fetch('/api/bookings/phone/' + encodeURIComponent(phone));
+            const bookings = await res.json();
+            const container = document.getElementById('tracking-results');
+
+            if (bookings.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400">No bookings found for phone number: <span class="text-white font-bold">${phone}</span></p>`;
+                return;
+            }
+
+            container.innerHTML = bookings.map(b => `
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 text-sm">
+                    <div>
+                        <p class="font-bold text-sky-400">${b.id} - ${b.serviceType} (${b.vehicleType})</p>
+                        <p class="text-xs text-slate-400">Name: ${b.customerName} | Plate: <strong class="text-white">${b.plateNumber}</strong> | Date: ${b.bookingDate}</p>
+                        <p class="text-xs text-slate-400">Phone: ${b.phoneNumber} ${b.amount > 0 ? `| Payment: ${b.paymentMethod.toUpperCase()} (${b.amount} ETB)` : '| <span class="text-amber-400">Call & Discuss</span>'}</p>
+                    </div>
+                    <div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                            b.status === 'verified' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' :
+                            b.status === 'rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/40' :
+                            'bg-amber-500/20 text-amber-400 border border-amber-500/40'
+                        }">${b.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        fetchPrices();
+    </script>
+</body>
+</html>
